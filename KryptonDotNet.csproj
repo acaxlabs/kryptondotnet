@@ -36,6 +36,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.6132.35681, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\helium\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
@@ -56,8 +60,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pagination.cs" />
+    <Compile Include="FilteredResult.cs" />
+    <Compile Include="HeaderUtil.cs" />
+    <Compile Include="KryptonApiController.cs" />
+    <Compile Include="KryptonResult.cs" />
+    <Compile Include="PaginatedResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortedResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

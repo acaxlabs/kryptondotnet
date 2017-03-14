@@ -17,19 +17,6 @@ using XenonExtensions;
 
 namespace KryptonDotNet
 {
-    public static class PaginationApiController
-    {
-        /// <summary>
-        /// Creates a KryptonDotNet.PaginatedResult
-        /// </summary>
-        /// <param name="controller">the current Web Api controller</param>
-        /// <param name="items">the list of objects to page</param>
-        /// <returns>KryptonDotNet.PaginatedResult</returns>
-        public static PaginatedResult Paginate(this ApiController controller, IQueryable<object> items)
-        {
-            return new PaginatedResult(items, controller.ActionContext);
-        }
-    }
     /// <summary>
     ///  Represents a paged list of items as content and paging info in header values
     ///  : -h krypton-page, -h krypton-total, -h krypton-pageSize
@@ -39,6 +26,11 @@ namespace KryptonDotNet
         public PaginatedResult(IQueryable<object> items, HttpActionContext actionContext)
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
+            //PageInfo pageInfo = HeaderUtil.ResolvePageInfoHeaders(actionContext.Request.Headers);
+            //pageInfo.Total = pageInfo.Total == 0 ? items.Count() : pageInfo.Total;
+            //pageInfo.Items = items.Skip((pageInfo.Page - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();
+            //this.Response.Content = new ObjectContent(pageInfo.Items.GetType(), pageInfo.Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+
             var query = actionContext.Request.RequestUri.ParseQueryString();
             PageInfo pageInfo = new PageInfo();
             pageInfo.Page = pageInfo.Page.TryParseExtended( query["page"], pageInfo.Page);

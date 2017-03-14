@@ -20,3 +20,4 @@ C:\Users\josh.hickerson\Documents\KryptonDotNet\obj\Debug\KryptonDotNet.csprojRe
 C:\Users\josh.hickerson\Documents\KryptonDotNet\obj\Debug\KryptonDotNet.dll
 C:\Users\josh.hickerson\Documents\KryptonDotNet\obj\Debug\KryptonDotNet.pdb
 C:\Users\josh.hickerson\Documents\KryptonDotNet\bin\Debug\XenonExtensions.dll
+C:\Users\josh.hickerson\Documents\kryptondotnet\bin\Debug\System.Linq.Dynamic.dll
