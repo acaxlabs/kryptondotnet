@@ -23,31 +23,25 @@ namespace KryptonDotNet
     /// </summary>
     public class PaginatedResult : ResponseMessageResult
     {
+        public IQueryable<object> Items { get; }
+
         public PaginatedResult(IQueryable<object> items, HttpActionContext actionContext)
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
-            //PageInfo pageInfo = HeaderUtil.ResolvePageInfoHeaders(actionContext.Request.Headers);
-            //pageInfo.Total = pageInfo.Total == 0 ? items.Count() : pageInfo.Total;
-            //pageInfo.Items = items.Skip((pageInfo.Page - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();
-            //this.Response.Content = new ObjectContent(pageInfo.Items.GetType(), pageInfo.Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+            PageInfo pageInfo = HeaderUtil.ResolvePageInfoHeaders(actionContext.Request.Headers);
 
-            var query = actionContext.Request.RequestUri.ParseQueryString();
-            PageInfo pageInfo = new PageInfo();
-            pageInfo.Page = pageInfo.Page.TryParseExtended( query["page"], pageInfo.Page);
-            pageInfo.Total = pageInfo.Total.TryParseExtended(query["total"], pageInfo.Total);
-            pageInfo.PageSize = pageInfo.PageSize.TryParseExtended(query["pageSize"], pageInfo.PageSize);
             pageInfo.Total = pageInfo.Total == 0 ? items.Count() : pageInfo.Total;
-            pageInfo.Items = items.Skip((pageInfo.Page - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();
-            this.Response.Content = new ObjectContent(pageInfo.Items.GetType(), pageInfo.Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+            this.Items = items.Skip((pageInfo.Page - 1) * pageInfo.PageSize).Take(pageInfo.PageSize);
+            this.Response.Content = new ObjectContent(this.Items.GetType(), this.Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
 
-            this.Response.Headers.Remove("krypton-page");
-            this.Response.Headers.Add("krypton-page", pageInfo.Page.ToString());
+            this.Response.Headers.Remove(HeaderValues.KRYPTON_PAGE);
+            this.Response.Headers.Add(HeaderValues.KRYPTON_PAGE, pageInfo.Page.ToString());
 
-            this.Response.Headers.Remove("krypton-total");
-            this.Response.Headers.Add("krypton-total", pageInfo.Total.ToString());
+            this.Response.Headers.Remove(HeaderValues.KRYPTON_TOTAL);
+            this.Response.Headers.Add(HeaderValues.KRYPTON_TOTAL, pageInfo.Total.ToString());
 
-            this.Response.Headers.Remove("krypton-pageSize");
-            this.Response.Headers.Add("krypton-pageSize", pageInfo.PageSize.ToString());
+            this.Response.Headers.Remove(HeaderValues.KRYPTON_PAGE_SIZE);
+            this.Response.Headers.Add(HeaderValues.KRYPTON_PAGE_SIZE, pageInfo.PageSize.ToString());
         }
 
     }
@@ -57,6 +51,5 @@ namespace KryptonDotNet
         public int Total = 0;
         public int Page = 1;
         public int PageSize = 100;
-        public List<object> Items { get; set; }
     }
 }

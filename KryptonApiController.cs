@@ -13,7 +13,7 @@ namespace KryptonDotNet
         /// Creates a KryptonDotNet.FilteredResult
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
-        /// <param name="items">the list of objects to page</param>
+        /// <param name="items">the list of objects to filter</param>
         /// <returns>KryptonDotNet.FilteredResult</returns>
         public static FilteredResult Filter(this ApiController controller, IQueryable<object> items)
         {
@@ -23,7 +23,7 @@ namespace KryptonDotNet
         /// Creates a KryptonDotNet.SortedResult
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
-        /// <param name="items">the list of objects to page</param>
+        /// <param name="items">the list of objects to sort</param>
         /// <returns>KryptonDotNet.SortedResult</returns>
         public static SortedResult Sort(this ApiController controller, IQueryable<object> items)
         {
@@ -42,14 +42,27 @@ namespace KryptonDotNet
         }
 
         /// <summary>
-        /// Creates a KryptonDotNet.KrptonListResult
+        /// Creates a KryptonDotNet.KrptonListResult, encapsulates functionality from
+        /// FilteredResult, SortedResult, and PaginatedResult
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
-        /// <param name="items">the list of objects to page</param>
+        /// <param name="items">the list of objects to process</param>
         /// <returns>KryptonDotNet.KrptonListResult</returns>
         public static KryptonListResult KryptonResult(this ApiController controller, IQueryable<object> items)
         {
-            return new KryptonListResult(items, controller.ActionContext);
+            try
+            {
+                var filterRes = new FilteredResult(items, controller.ActionContext);
+                var sortRes = new SortedResult(filterRes.Items, controller.ActionContext);
+                var pagedRes = new PaginatedResult(sortRes.Items, controller.ActionContext);
+                return new KryptonListResult(pagedRes.Response);
+            }
+            catch (Exception ex)
+            {
+                //
+                return new KryptonListResult(items, controller.ActionContext);
+            }
+            
         }
     }
 }

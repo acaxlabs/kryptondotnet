@@ -11,8 +11,13 @@ using System.Web.Http.Results;
 
 namespace KryptonDotNet
 {
+    /// <summary>
+    ///  Represents a sorted list of items as content and sort info in header value
+    ///  : -h krypton-sort
+    /// </summary>
     public class SortedResult : ResponseMessageResult
     {
+        public IQueryable<object> Items { get; }
         public SortedResult(IQueryable<object> items, HttpActionContext actionContext) 
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
@@ -23,7 +28,8 @@ namespace KryptonDotNet
                 var sortClause = sort.StartsWith("-") ? $"{sortby} DESC" : sortby;
                 items = items.OrderBy(sortClause);
             }
-            this.Response.Content = new ObjectContent(items.GetType(), items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+            this.Items = items;
+            this.Response.Content = new ObjectContent(Items.GetType(), Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
         }
     }
 }

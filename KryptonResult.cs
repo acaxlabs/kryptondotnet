@@ -13,20 +13,32 @@ using System.Web.Http.Results;
 
 namespace KryptonDotNet
 {
-   
-    
+    /// <summary>
+    /// Creates a KryptonDotNet.KrptonListResult, encapsulates functionality from
+    /// FilteredResult, SortedResult, and PaginatedResult
+    /// </summary>
     public class KryptonListResult : ResponseMessageResult
     {
+        public IQueryable<object> Items { get; }
+
+        public KryptonListResult(HttpResponseMessage message)
+            : base(message)  { }
+
         public KryptonListResult(IQueryable<object> items, HttpActionContext actionContext)
-            : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
+            :base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
             var filterRes = new FilteredResult(items, actionContext);
-            items = filterRes.Response.Content.ReadAsAsync<IQueryable<object>>().Result;
-            var sortRes = new SortedResult(items, actionContext);
-            items = sortRes.Response.Content.ReadAsAsync<IQueryable<object>>().Result;
-            var pagedRes = new PaginatedResult(items, actionContext);
-            this.Response.Content = pagedRes.Response.Content;
-
+            var sortRes = new SortedResult(filterRes.Items, actionContext);
+            var pagedRes = new PaginatedResult(sortRes.Items, actionContext);
+            Items = pagedRes.Items;
+            foreach (var item in pagedRes.Response.Headers)
+            {
+                this.Response.Headers.Add(item.Key, item.Value);
+            }
+            this.Response.Content = new ObjectContent(Items.GetType(), Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
         }
     }
+
+
+    
 }
