@@ -24,8 +24,7 @@ namespace KryptonDotNet
             var sort = HeaderUtil.ResolveSortHeader(actionContext.Request.Headers);
             if (!string.IsNullOrEmpty(sort))
             {
-                var sortby = Regex.Replace(sort, "[-+]", "");
-                var sortClause = sort.StartsWith("-") ? $"{sortby} DESC" : sortby;
+                var sortClause = sort.Replace("+","").Replace("-", " DESC");
                 items = items.OrderBy(sortClause);
             }
             this.Items = items;
