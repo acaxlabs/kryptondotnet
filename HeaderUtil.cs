@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace KryptonDotNet
     {
         public static string KRYPTON_PAGE = "krypton-page";
         public static string KRYPTON_TOTAL = "krypton-total";
-        public static string KRYPTON_PAGE_SIZE = "krypton-size";
+        public static string KRYPTON_PAGE_SIZE = "krypton-page-size";
         public static string KRYPTON_SORT = "krypton-sort";
         public static string KRYPTON_FILTER_INFO = "krypton-filter-info";
     }
@@ -32,15 +33,15 @@ namespace KryptonDotNet
         internal static string ResolveSortHeader(HttpRequestHeaders headers)
         {
             IEnumerable<string> values = Enumerable.Empty<string>();
-            headers.TryGetValues(HeaderValues.KRYPTON_PAGE_SIZE, out values);
+            headers.TryGetValues(HeaderValues.KRYPTON_SORT, out values);
             return values?.FirstOrDefault() ?? null;
         }
 
-        internal static FilterInfo[] ResolveFilterInfoHeader(HttpRequestHeaders headers)
+        internal static JObject ResolveFilterInfoHeader(HttpRequestHeaders headers)
         {
             IEnumerable<string> values = Enumerable.Empty<string>();
-            if (!headers.TryGetValues(HeaderValues.KRYPTON_FILTER_INFO, out values)) return new FilterInfo[]{ };
-            return JsonConvert.DeserializeObject<FilterInfo[]>(values.FirstOrDefault());
+            if (!headers.TryGetValues(HeaderValues.KRYPTON_FILTER_INFO, out values)) return null;
+            return JsonConvert.DeserializeObject<JObject>(values.FirstOrDefault());
 
         }
 
