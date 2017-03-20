@@ -22,33 +22,30 @@ namespace KryptonDotNet
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
             var filters = HeaderUtil.ResolveFilterInfoHeader(actionContext.Request.Headers);
-            filters = filters.Where(f => !string.IsNullOrEmpty(f.Value) && string.Compare(f.Value, "all", true) != 0).ToArray();
-
-            if (filters != null && filters.Length != 0)
+            if (filters != null)
             {
                 StringBuilder filterClause = new StringBuilder(string.Empty);
-                for (int i = 0; i < filters.Length; i++)
+                foreach (var item in filters.Properties())
                 {
-                    var filter = filters[i];
-                    filterClause.Append(filter.ToString());
-                    if (i == filters.Length - 1) continue;
-                    filterClause.Append(" and ");
-                }
-                items = items.Where(filterClause.ToString());
+                    if (string.Compare(item.Value.ToString(), "all", true) == 0
+                        || string.Compare(item.Value.ToString(), "any", true) == 0
+                        || string.Compare(item.Value.ToString(), "*", true) == 0
+                        || string.IsNullOrEmpty(item.Value.ToString())) continue;
 
+                    if (!string.IsNullOrEmpty(filterClause.ToString()))
+                        filterClause.Append(" and ");
+
+                    filterClause.Append(BuildFilterClause(item.Path, item.Value.ToString()));
+                }
+                items = string.IsNullOrEmpty(filterClause.ToString()) ? items : items.Where(filterClause.ToString());
             }
             Items = items;
-            this.Response.Content = new ObjectContent(Items.GetType(), items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+            this.Response.Content = new ObjectContent(Items.GetType(), Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
         }
 
-    }
-    internal class FilterInfo
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public override string ToString()
+        private static string BuildFilterClause(string key, string value)
         {
-            return $"{Key}.ToString() = \"{Value}\"";
+            return $"{key}.ToString() = \"{value}\"";
         }
     }
 }
