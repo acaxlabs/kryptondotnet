@@ -19,7 +19,7 @@ namespace KryptonDotNet
 {
     /// <summary>
     ///  Represents a paged list of items as content and paging info in header values
-    ///  : -h krypton-page, -h krypton-total, -h krypton-pageSize
+    ///  : -H krypton-page, krypton-total, krypton-pageSize
     /// </summary>
     public class PaginatedResult : ResponseMessageResult
     {

@@ -11,6 +11,7 @@ namespace KryptonDotNet
     {
         /// <summary>
         /// Creates a KryptonDotNet.FilteredResult
+        /// requires -H krypton-filter-info
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to filter</param>
@@ -21,6 +22,7 @@ namespace KryptonDotNet
         }
         /// <summary>
         /// Creates a KryptonDotNet.SortedResult
+        /// requires -H krypton-sort
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to sort</param>
@@ -32,6 +34,7 @@ namespace KryptonDotNet
 
         /// <summary>
         /// Creates a KryptonDotNet.PaginatedResult
+        /// requires -H krypton-page, krypton-page-size, krypton-total
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to page</param>
@@ -44,6 +47,7 @@ namespace KryptonDotNet
         /// <summary>
         /// Creates a KryptonDotNet.KrptonListResult, encapsulates functionality from
         /// FilteredResult, SortedResult, and PaginatedResult
+        /// uses -H krypton-page, krypton-page-size, krypton-total, krypton-sort, krypton-filter-info
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to process</param>

@@ -13,7 +13,7 @@ namespace KryptonDotNet
 {
     /// <summary>
     ///  Represents a sorted list of items as content and sort info in header value
-    ///  : -h krypton-sort
+    ///  : -H krypton-sort
     /// </summary>
     public class SortedResult : ResponseMessageResult
     {

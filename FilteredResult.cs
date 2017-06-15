@@ -12,7 +12,7 @@ namespace KryptonDotNet
 {
     /// <summary>
     ///  Represents a filtered list of items as content and filter info in header values
-    ///  : -h krypton-filter-info(json serialized array-[{ "key":key, "value":value },...] )
+    ///  : -H krypton-filter-info(json serialized array-[{ "key":key, "value":value },...] )
     /// </summary>
     public class FilteredResult : ResponseMessageResult
     {
