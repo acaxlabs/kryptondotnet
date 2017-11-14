@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -9,6 +10,44 @@ namespace KryptonDotNet
 {
     public static class KryptonApiController
     {
+        /// <summary>
+        /// Creates a KryptonDotNet.ErrorResult with a status code of InternalServerError
+        /// </summary>
+        /// <param name="controller">the current Web Api controller</param>
+        /// <param name="ex">an exception, all the messages in the exception will be in the ReasonPhrase of the response and also in the response's content</param>
+        /// <returns>returns a KryptonDotNet.ErrorResult</returns>
+        public static ErrorResult ErrorResult(this ApiController controller, Exception ex)
+        {
+            return new ErrorResult(ex);
+        }
+
+        /// <summary>
+        /// Creates a KryptonDotNet.ErrorResult
+        /// </summary>
+        /// <param name="controller">the current Web Api controller</param>
+        /// <param name="statusCode">A HttpStatusCode, ie InternalServerError, BadRequest, Forbidden</param>
+        /// <param name="message">the message you want displayed to client</param>
+        /// <param name="content">any data to be handled on the client</param>
+        /// <param name="ex">an exception, all the messages in the exception will be in the ReasonPhrase of the response</param>
+        /// <returns>returns a KryptonDotNet.ErrorResult</returns>
+        public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode, string message, object content, Exception ex)
+        {
+            return new ErrorResult(statusCode, message, content, ex);
+        }
+
+        /// <summary>
+        /// Creates a KryptonDotNet.ErrorResult
+        /// </summary>
+        /// <param name="controller">the current Web Api controller</param>
+        /// <param name="statusCode">A HttpStatusCode, ie InternalServerError, BadRequest, Forbidden</param>
+        /// <param name="error">an Error object that contains the message and data to be seen by and handled on the client respectively</param>
+        /// <param name="ex">an exception, all the messages in the exception will be in the ReasonPhrase of the response</param>
+        /// <returns>returns a KryptonDotNet.ErrorResult</returns>
+        public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode, Error error, Exception ex)
+        {
+            return new ErrorResult(statusCode, error, ex);
+        }
+
         /// <summary>
         /// Creates a KryptonDotNet.FilteredResult
         /// requires -H krypton-filter-info
@@ -20,6 +59,7 @@ namespace KryptonDotNet
         {
             return new FilteredResult(items, controller.ActionContext);
         }
+
         /// <summary>
         /// Creates a KryptonDotNet.SortedResult
         /// requires -H krypton-sort
@@ -66,7 +106,7 @@ namespace KryptonDotNet
                 //
                 return new KryptonListResult(items, controller.ActionContext);
             }
-            
+
         }
     }
 }
