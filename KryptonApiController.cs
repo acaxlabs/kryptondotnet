@@ -26,13 +26,14 @@ namespace KryptonDotNet
         /// </summary>
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="statusCode">A HttpStatusCode, ie InternalServerError, BadRequest, Forbidden</param>
+        /// <param name="type">application specific type of error to be handled on client</param>
         /// <param name="message">the message you want displayed to client</param>
         /// <param name="content">any data to be handled on the client</param>
         /// <param name="ex">an exception, all the messages in the exception will be in the ReasonPhrase of the response</param>
         /// <returns>returns a KryptonDotNet.ErrorResult</returns>
-        public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode, string message, object content, Exception ex)
+        public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode,string type, string message, object content, Exception ex)
         {
-            return new ErrorResult(statusCode, message, content, ex);
+            return new ErrorResult(statusCode, type, message, content, ex);
         }
 
         /// <summary>

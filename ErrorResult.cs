@@ -14,11 +14,11 @@ namespace KryptonDotNet
 {
     public class ErrorResult : ResponseMessageResult
     {
-        public ErrorResult(HttpStatusCode statusCode, string message, object content, Exception ex) : base(new HttpResponseMessage(statusCode))
+        public ErrorResult(HttpStatusCode statusCode, string type, string message, object content, Exception ex) : base(new HttpResponseMessage(statusCode))
         {
             message = string.IsNullOrEmpty(message) ? ex.AllMessages().Replace(Environment.NewLine, " ") : message;
             this.Response.ReasonPhrase = ex.AllMessages().Replace(Environment.NewLine, " ");
-            this.Response.Content = new ObjectContent(typeof(Error), new Error(message, content), new JsonMediaTypeFormatter());
+            this.Response.Content = new ObjectContent(typeof(Error), new Error(type, message, content), new JsonMediaTypeFormatter());
         }
 
         public ErrorResult(HttpStatusCode statusCode, Error error, Exception ex) : base(new HttpResponseMessage(statusCode))
@@ -32,7 +32,7 @@ namespace KryptonDotNet
         {
             string message = ex.AllMessages().Replace(Environment.NewLine, " ");
             this.Response.ReasonPhrase = message;
-            this.Response.Content = new ObjectContent(typeof(Error), new Error(message, message), new JsonMediaTypeFormatter());
+            this.Response.Content = new ObjectContent(typeof(Error), new Error("error", message, message), new JsonMediaTypeFormatter());
         }
     }
 

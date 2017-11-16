@@ -10,15 +10,18 @@ namespace KryptonDotNet
     {
         public string Message { get; set; }
         public object Content { get; set; }
+        public string Type { get; set; } = "Error";
 
-        public Error(string msg, object content)
+        public Error(string type, string msg, object content)
         {
+            Type = type;
             Message = msg;
             Content = content;
         }
 
         public Error(Error error)
         {
+            Type = error.Type;
             Message = error.Message;
             Content = error.Content;
         }
