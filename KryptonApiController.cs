@@ -18,7 +18,7 @@ namespace KryptonDotNet
         /// <returns>returns a KryptonDotNet.ErrorResult</returns>
         public static ErrorResult ErrorResult(this ApiController controller, Exception ex)
         {
-            return new ErrorResult(ex);
+            return new ErrorResult(ex, controller.ActionContext);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace KryptonDotNet
         /// <returns>returns a KryptonDotNet.ErrorResult</returns>
         public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode,string type, string message, object content, Exception ex)
         {
-            return new ErrorResult(statusCode, type, message, content, ex);
+            return new ErrorResult(statusCode, type, message, content, ex, controller.ActionContext);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace KryptonDotNet
         /// <returns>returns a KryptonDotNet.ErrorResult</returns>
         public static ErrorResult ErrorResult(this ApiController controller, HttpStatusCode statusCode, Error error, Exception ex)
         {
-            return new ErrorResult(statusCode, error, ex);
+            return new ErrorResult(statusCode, error, ex, controller.ActionContext);
         }
 
         /// <summary>
