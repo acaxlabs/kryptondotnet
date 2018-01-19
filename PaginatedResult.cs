@@ -21,11 +21,11 @@ namespace KryptonDotNet
     ///  Represents a paged list of items as content and paging info in header values
     ///  : -H krypton-page, krypton-total, krypton-pageSize
     /// </summary>
-    public class PaginatedResult : ResponseMessageResult
+    public class PaginatedResult<T> : ResponseMessageResult
     {
-        public IQueryable<object> Items { get; }
+        public IQueryable<T> Items { get; }
 
-        public PaginatedResult(IQueryable<object> items, HttpActionContext actionContext)
+        public PaginatedResult(IQueryable<T> items, HttpActionContext actionContext)
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
             PageInfo pageInfo = HeaderUtil.ResolvePageInfoHeaders(actionContext.Request.Headers);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
@@ -14,11 +15,11 @@ namespace KryptonDotNet
     ///  Represents a filtered list of items as content and filter info in header values
     ///  : -H krypton-filter-info(json serialized array-[{ "key":key, "value":value },...] )
     /// </summary>
-    public class FilteredResult : ResponseMessageResult
+    public class FilteredResult<T> : ResponseMessageResult
     {
-        public IQueryable<object> Items { get; }
+        public IQueryable<T> Items { get; }
 
-        public FilteredResult(IQueryable<object> items, HttpActionContext actionContext)
+        public FilteredResult(IQueryable<T> items, HttpActionContext actionContext)
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
             var filters = HeaderUtil.ResolveFilterInfoHeader(actionContext.Request.Headers);
@@ -34,8 +35,10 @@ namespace KryptonDotNet
 
                     if (!string.IsNullOrEmpty(filterClause.ToString()))
                         filterClause.Append(" and ");
-
-                    filterClause.Append(BuildFilterClause(item.Path, item.Value.ToString()));
+                    Type type = typeof(T);
+                    PropertyInfo propertyInfo = type.GetProperty(item.Name);
+                    if (propertyInfo is null) continue;
+                    filterClause.Append(BuildFilterClause(item.Path, item.Value.ToString(), propertyInfo));
                 }
                 items = string.IsNullOrEmpty(filterClause.ToString()) ? items : items.Where(filterClause.ToString());
             }
@@ -43,9 +46,10 @@ namespace KryptonDotNet
             this.Response.Content = new ObjectContent(Items.GetType(), Items, actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
         }
 
-        private static string BuildFilterClause(string key, string value)
+        private static string BuildFilterClause(string key, string value, PropertyInfo propertyInfo)
         {
-            return $"{key}.ToString() = \"{value}\"";
+            Type propertyType = propertyInfo.PropertyType;
+            return propertyType.IsEnum ? $"{key} = \"{value}\"" : $"{key}.ToString() = \"{value}\"";
         }
     }
 }

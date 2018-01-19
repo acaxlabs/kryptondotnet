@@ -17,19 +17,19 @@ namespace KryptonDotNet
     /// Creates a KryptonDotNet.KrptonListResult, encapsulates functionality from
     /// FilteredResult, SortedResult, and PaginatedResult
     /// </summary>
-    public class KryptonListResult : ResponseMessageResult
+    public class KryptonListResult<T> : ResponseMessageResult
     {
-        public IQueryable<object> Items { get; }
+        public IQueryable<T> Items { get; }
 
         public KryptonListResult(HttpResponseMessage message)
             : base(message)  { }
 
-        public KryptonListResult(IQueryable<object> items, HttpActionContext actionContext)
+        public KryptonListResult(IQueryable<T> items, HttpActionContext actionContext)
             :base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
-            var filterRes = new FilteredResult(items, actionContext);
-            var sortRes = new SortedResult(filterRes.Items, actionContext);
-            var pagedRes = new PaginatedResult(sortRes.Items, actionContext);
+            var filterRes = new FilteredResult<T>(items, actionContext);
+            var sortRes = new SortedResult<T>(filterRes.Items, actionContext);
+            var pagedRes = new PaginatedResult<T>(sortRes.Items, actionContext);
             Items = pagedRes.Items;
             foreach (var item in pagedRes.Response.Headers)
             {

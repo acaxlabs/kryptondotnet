@@ -15,10 +15,10 @@ namespace KryptonDotNet
     ///  Represents a sorted list of items as content and sort info in header value
     ///  : -H krypton-sort
     /// </summary>
-    public class SortedResult : ResponseMessageResult
+    public class SortedResult<T> : ResponseMessageResult
     {
-        public IQueryable<object> Items { get; }
-        public SortedResult(IQueryable<object> items, HttpActionContext actionContext) 
+        public IQueryable<T> Items { get; }
+        public SortedResult(IQueryable<T> items, HttpActionContext actionContext) 
             : base(new HttpResponseMessage(System.Net.HttpStatusCode.OK))
         {
             var sort = HeaderUtil.ResolveSortHeader(actionContext.Request.Headers);

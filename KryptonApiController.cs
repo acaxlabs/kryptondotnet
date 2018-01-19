@@ -56,9 +56,9 @@ namespace KryptonDotNet
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to filter</param>
         /// <returns>KryptonDotNet.FilteredResult</returns>
-        public static FilteredResult Filter(this ApiController controller, IQueryable<object> items)
+        public static FilteredResult<T> Filter<T>(this ApiController controller, IQueryable<T> items)
         {
-            return new FilteredResult(items, controller.ActionContext);
+            return new FilteredResult<T>(items, controller.ActionContext);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace KryptonDotNet
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to sort</param>
         /// <returns>KryptonDotNet.SortedResult</returns>
-        public static SortedResult Sort(this ApiController controller, IQueryable<object> items)
+        public static SortedResult<T> Sort<T>(this ApiController controller, IQueryable<T> items)
         {
-            return new SortedResult(items, controller.ActionContext);
+            return new SortedResult<T>(items, controller.ActionContext);
         }
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace KryptonDotNet
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to page</param>
         /// <returns>KryptonDotNet.PaginatedResult</returns>
-        public static PaginatedResult Paginate(this ApiController controller, IQueryable<object> items)
+        public static PaginatedResult<T> Paginate<T>(this ApiController controller, IQueryable<T> items)
         {
-            return new PaginatedResult(items, controller.ActionContext);
+            return new PaginatedResult<T>(items, controller.ActionContext);
         }
 
         /// <summary>
@@ -93,19 +93,19 @@ namespace KryptonDotNet
         /// <param name="controller">the current Web Api controller</param>
         /// <param name="items">the list of objects to process</param>
         /// <returns>KryptonDotNet.KrptonListResult</returns>
-        public static KryptonListResult KryptonResult(this ApiController controller, IQueryable<object> items)
+        public static KryptonListResult<T> KryptonResult<T>(this ApiController controller, IQueryable<T> items)
         {
             try
             {
-                var filterRes = new FilteredResult(items, controller.ActionContext);
-                var sortRes = new SortedResult(filterRes.Items, controller.ActionContext);
-                var pagedRes = new PaginatedResult(sortRes.Items, controller.ActionContext);
-                return new KryptonListResult(pagedRes.Response);
+                var filterRes = new FilteredResult<T>(items, controller.ActionContext);
+                var sortRes = new SortedResult<T>(filterRes.Items, controller.ActionContext);
+                var pagedRes = new PaginatedResult<T>(sortRes.Items, controller.ActionContext);
+                return new KryptonListResult<T>(pagedRes.Response);
             }
             catch (Exception ex)
             {
                 //
-                return new KryptonListResult(items, controller.ActionContext);
+                return new KryptonListResult<T>(items, controller.ActionContext);
             }
 
         }
