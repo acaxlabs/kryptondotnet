@@ -45,8 +45,7 @@ namespace KryptonDotNet
 
         private static string BuildFilterClause(string key, string value)
         {
-            var term = key.ToString();
-            return $"{term} = \"{value}\"";
+            return $"{key}.ToString() = \"{value}\"";
         }
     }
 }
