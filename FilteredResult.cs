@@ -36,7 +36,7 @@ namespace KryptonDotNet
                     if (!string.IsNullOrEmpty(filterClause.ToString()))
                         filterClause.Append(" and ");
                     Type type = typeof(T);
-                    PropertyInfo propertyInfo = type.GetProperty(item.Name);
+                    PropertyInfo propertyInfo = type.GetProperty(item.Name, BindingFlags.IgnoreCase| BindingFlags.Public | BindingFlags.Instance);
                     if (propertyInfo is null) continue;
                     filterClause.Append(BuildFilterClause(item.Path, item.Value.ToString(), propertyInfo));
                 }
