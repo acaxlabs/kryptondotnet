@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiExceptionFilter.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="ErrorResult.cs" />
     <Compile Include="FilteredResult.cs" />
