@@ -15,10 +15,11 @@ namespace KryptonDotNet
     {
         public override void OnException(HttpActionExecutedContext context)
         {
-            string message =  context.Exception.AllMessages().Replace(Environment.NewLine, " ");
+            Exception ex = context.Exception;
+            string message =  ex.AllMessages().Replace(Environment.NewLine, " ");
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             response.ReasonPhrase = message;
-            response.Content = new ObjectContent(typeof(Error), new Error("error", message, message), new JsonMediaTypeFormatter());
+            response.Content = new ObjectContent(typeof(Error), new Error("error", message, ex), new JsonMediaTypeFormatter());
             context.Response = response; 
         }
     }
