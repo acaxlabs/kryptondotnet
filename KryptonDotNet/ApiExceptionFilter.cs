@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using XenonExtensions;
@@ -16,7 +17,7 @@ namespace KryptonDotNet
         public override void OnException(HttpActionExecutedContext context)
         {
             Exception ex = context.Exception;
-            string message =  ex.AllMessages().Replace(Environment.NewLine, " ");
+            string message = Regex.Replace(ex.AllMessages(), @"\r\n?|\n", "-");
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             response.ReasonPhrase = message;
             response.Content = new ObjectContent(typeof(Error), new Error("error", message, ex), new JsonMediaTypeFormatter());
