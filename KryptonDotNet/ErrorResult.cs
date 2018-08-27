@@ -10,7 +10,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using System.Web.Http;
 using XenonExtensions;
-using System.Web.Configuration;
+using System.Configuration;
 
 namespace KryptonDotNet
 {
@@ -74,9 +74,9 @@ namespace KryptonDotNet
 
         private bool CanReturnDetailedErrors()
         {
-            if(WebConfigurationManager.AppSettings.AllKeys.Contains("DisableDetailedErrorResults"))
+            if(ConfigurationManager.AppSettings.AllKeys.Contains("DisableDetailedErrorResults"))
             {
-                return bool.Parse(WebConfigurationManager.AppSettings["DisableDetailedErrorResults"]);
+                return !bool.Parse( ConfigurationManager.AppSettings["DisableDetailedErrorResults"]);
             }
             else
             {
