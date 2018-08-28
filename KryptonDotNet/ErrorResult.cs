@@ -85,8 +85,9 @@ namespace KryptonDotNet
         }
         private void SetupUndetailedResult(HttpActionContext actionContext)
         {
-            this.Response.ReasonPhrase = DEFAULT_ERROR_MESSAGE;
-            this.Response.Content = new ObjectContent(typeof(Error), new Error("Error", DEFAULT_ERROR_MESSAGE, new { }), actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+            var message = DEFAULT_ERROR_MESSAGE;
+            this.Response.ReasonPhrase = DEFAULT_ERROR_MESSAGE + " and you have disabled detailed error results. Check your Web.Config for the setting DisableDetailedErrorResults.";
+            this.Response.Content = new ObjectContent(typeof(Error), new Error("error", message, new { }), actionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
         }
 
     }

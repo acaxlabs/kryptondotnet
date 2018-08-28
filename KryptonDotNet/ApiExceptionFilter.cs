@@ -15,7 +15,7 @@ namespace KryptonDotNet
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
-        private string DEFAULT_ERROR_MESSAGE= "";
+        private string DEFAULT_ERROR_MESSAGE= "An error has occurred";
 
         public override void OnException(HttpActionExecutedContext context)
         { 
@@ -30,8 +30,9 @@ namespace KryptonDotNet
             }
             else
             {
+                var message = DEFAULT_ERROR_MESSAGE + " and you have disabled detailed error results. Check your Web.Config for the setting DisableDetailedErrorResults.";
                 response.ReasonPhrase = DEFAULT_ERROR_MESSAGE;
-                response.Content = new ObjectContent(typeof(Error), new Error("Error", DEFAULT_ERROR_MESSAGE, new { }), new JsonMediaTypeFormatter());
+                response.Content = new ObjectContent(typeof(Error), new Error("error", DEFAULT_ERROR_MESSAGE, new { }), new JsonMediaTypeFormatter());
             }
 
             context.Response = response;
