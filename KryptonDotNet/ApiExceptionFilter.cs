@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,14 +15,40 @@ namespace KryptonDotNet
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
+        private string DEFAULT_ERROR_MESSAGE= "An error has occurred";
+
         public override void OnException(HttpActionExecutedContext context)
-        {
-            Exception ex = context.Exception;
-            string message = Regex.Replace(ex.AllMessages(), @"\r\n?|\n", "-");
+        { 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            response.ReasonPhrase = message;
-            response.Content = new ObjectContent(typeof(Error), new Error("error", message, ex), new JsonMediaTypeFormatter());
-            context.Response = response; 
+
+            if(CanReturnDetailedErrors())
+            {
+                Exception ex = context.Exception;
+                string message = Regex.Replace(ex.AllMessages(), @"\r\n?|\n", "-");
+                response.ReasonPhrase = message;
+                response.Content = new ObjectContent(typeof(Error), new Error("error", message, ex), new JsonMediaTypeFormatter());
+            }
+            else
+            {
+                var message = DEFAULT_ERROR_MESSAGE + " and you have disabled detailed error results. Check your Web.Config for the setting DisableDetailedErrorResults.";
+                response.ReasonPhrase = DEFAULT_ERROR_MESSAGE;
+                response.Content = new ObjectContent(typeof(Error), new Error("error", DEFAULT_ERROR_MESSAGE, new { }), new JsonMediaTypeFormatter());
+            }
+
+            context.Response = response;
+        }
+
+
+        private bool CanReturnDetailedErrors()
+        {
+            if (ConfigurationManager.AppSettings.AllKeys.Contains("DisableDetailedErrorResults"))
+            {
+                return !bool.Parse(ConfigurationManager.AppSettings["DisableDetailedErrorResults"]);
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
